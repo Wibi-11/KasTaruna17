@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#DC2626">
+<title>KasTaruna – Karang Taruna 17 Agustusan</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ══════════════ LOGIN ══════════════ -->
+<div id="loginPage">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-icon">💰</div>
+      <h1>KasTaruna</h1>
+      <p>Sistem Kas Karang Taruna 17 Agustusan</p>
+    </div>
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="Masukkan username" value="admin" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="Masukkan password" value="taruna2026" autocomplete="current-password">
+    </div>
+    <button class="btn-login" id="btnLogin">🔐 Masuk Dashboard</button>
+    <div class="login-error" id="loginError">Username atau password salah!</div>
+    <p class="login-hint">Demo: admin / taruna2026</p>
+  </div>
+</div>
+
+<!-- ══════════════ APP ══════════════ -->
+<div id="app">
+
+  <!-- Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="s-icon">💰</div>
+        <div>
+          <h2>KasTaruna</h2>
+          <span>Karang Taruna RT 07</span>
+        </div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Menu Utama</div>
+      <div class="nav-item active" id="snav-dashboard" onclick="showPage('dashboard')"><span class="ni">📊</span> Dashboard</div>
+      <div class="nav-item" id="snav-pemasukan" onclick="showPage('pemasukan')"><span class="ni">💵</span> Pemasukan</div>
+      <div class="nav-item" id="snav-pengeluaran" onclick="showPage('pengeluaran')"><span class="ni">💸</span> Pengeluaran</div>
+      <div class="nav-section-label">Warga & Iuran</div>
+      <div class="nav-item" id="snav-iuran" onclick="showPage('iuran')"><span class="ni">👥</span> Iuran Warga</div>
+      <div class="nav-section-label">Laporan</div>
+      <div class="nav-item" id="snav-riwayat" onclick="showPage('riwayat')"><span class="ni">🕐</span> Riwayat Transaksi</div>
+      <div class="nav-item" id="snav-laporan" onclick="showPage('laporan')"><span class="ni">📄</span> Laporan Keuangan</div>
+      <div class="nav-section-label">Pengaturan</div>
+      <div class="nav-item" id="snav-kategori" onclick="showPage('kategori')"><span class="ni">🏷️</span> Kategori</div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="admin-chip">
+        <div class="admin-avatar">A</div>
+        <div class="admin-info">
+          <div class="aname">Admin Taruna</div>
+          <div class="arole">Bendahara</div>
+        </div>
+        <button class="btn-logout" id="btnLogout" title="Keluar">↩</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="btn-menu" id="btnMenu">☰</button>
+      <h3 id="topbarTitle">Dashboard</h3>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-date" id="topbarDate"></span>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="content">
+
+      <!-- ── DASHBOARD ── -->
+      <div class="page active" id="page-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card s-blue"><div class="stat-icon">💳</div><div class="stat-label">Saldo Saat Ini</div><div class="stat-value" id="statSaldo">Rp 0</div><div class="stat-sub">Total kas aktif</div></div>
+          <div class="stat-card s-green"><div class="stat-icon">📈</div><div class="stat-label">Total Pemasukan</div><div class="stat-value" id="statIn">Rp 0</div><div class="stat-sub">Semua sumber dana</div></div>
+          <div class="stat-card s-red"><div class="stat-icon">📉</div><div class="stat-label">Total Pengeluaran</div><div class="stat-value" id="statOut">Rp 0</div><div class="stat-sub">Semua pengeluaran</div></div>
+          <div class="stat-card s-yellow"><div class="stat-icon">🏆</div><div class="stat-label">Iuran Terkumpul</div><div class="stat-value" id="statIuran">Rp 0</div><div class="stat-sub" id="statIuranSub">0 dari 0 warga</div></div>
+        </div>
+        <div class="dash-grid">
+          <div class="card">
+            <div class="card-header"><span class="card-title">Progres Dana Acara</span></div>
+            <div class="card-body">
+              <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--gray-600)"><span>Dana Terkumpul</span><span id="prgPct">0%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="background:linear-gradient(90deg,var(--red),var(--red-dark));width:0%" id="prgBar"></div></div>
+              <div style="font-size:13px;color:var(--gray-500);margin-top:14px">Target Dana: <b id="targetDana" style="color:var(--gray-800)">Rp 5.000.000</b></div>
+              <div style="font-size:13px;color:var(--gray-500);margin-top:6px">Saldo tersedia: <b id="prgSaldo" style="color:var(--green)">Rp 0</b></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">Transaksi Terbaru</span></div>
+            <div id="dashRecentTx" style="padding:0 20px"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Iuran Warga — Ringkasan</span>
+            <button class="btn-secondary" onclick="showPage('iuran')">Lihat Semua →</button>
+          </div>
+          <div class="card-body">
+            <div style="display:flex;gap:0;flex-wrap:wrap">
+              <div style="flex:1;text-align:center;min-width:80px"><div style="font-size:26px;font-weight:800;color:var(--green)" id="dashBayar">0</div><div style="font-size:12px;color:var(--gray-500);margin-top:4px">Sudah Bayar</div></div>
+              <div style="flex:1;text-align:center;min-width:80px"><div style="font-size:26px;font-weight:800;color:var(--red)" id="dashBelum">0</div><div style="font-size:12px;color:var(--gray-500);margin-top:4px">Belum Bayar</div></div>
+              <div style="flex:1;text-align:center;min-width:80px"><div style="font-size:26px;font-weight:800;color:var(--gray-700)" id="dashTotal">0</div><div style="font-size:12px;color:var(--gray-500);margin-top:4px">Total Warga</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PEMASUKAN ── -->
+      <div class="page" id="page-pemasukan">
+        <div class="card">
+          <div class="card-header">
+            <div class="toolbar">
+              <div class="search-box"><span>🔍</span><input type="text" id="searchPemasukan" placeholder="Cari pemasukan..." oninput="renderPemasukan()"></div>
+              <select class="filter-select" id="filterKatPemasukan" onchange="renderPemasukan()"><option value="">Semua Kategori</option></select>
+            </div>
+            <button class="btn-primary" onclick="openModal('modalPemasukan')">＋ Tambah</button>
+          </div>
+          <div class="table-wrap">
+            <table><thead><tr><th>#</th><th>Tanggal</th><th>Keterangan</th><th>Kategori</th><th>Jumlah</th><th>Aksi</th></tr></thead>
+            <tbody id="bodyPemasukan"></tbody></table>
+          </div>
+          <div class="tx-list" id="listPemasukan"></div>
+        </div>
+      </div>
+
+      <!-- ── PENGELUARAN ── -->
+      <div class="page" id="page-pengeluaran">
+        <div class="card">
+          <div class="card-header">
+            <div class="toolbar">
+              <div class="search-box"><span>🔍</span><input type="text" id="searchPengeluaran" placeholder="Cari pengeluaran..." oninput="renderPengeluaran()"></div>
+              <select class="filter-select" id="filterKatPengeluaran" onchange="renderPengeluaran()"><option value="">Semua Kategori</option></select>
+            </div>
+            <button class="btn-primary" onclick="openModal('modalPengeluaran')">＋ Tambah</button>
+          </div>
+          <div class="table-wrap">
+            <table><thead><tr><th>#</th><th>Tanggal</th><th>Keterangan</th><th>Kategori</th><th>Jumlah</th><th>Aksi</th></tr></thead>
+            <tbody id="bodyPengeluaran"></tbody></table>
+          </div>
+          <div class="tx-list" id="listPengeluaran"></div>
+        </div>
+      </div>
+
+      <!-- ── IURAN WARGA ── -->
+      <div class="page" id="page-iuran">
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-header">
+            <div class="toolbar">
+              <div class="search-box"><span>🔍</span><input type="text" id="searchIuran" placeholder="Cari nama warga..." oninput="renderIuran()"></div>
+              <select class="filter-select" id="filterStatusIuran" onchange="renderIuran()">
+                <option value="">Semua Status</option>
+                <option value="paid">Sudah Bayar</option>
+                <option value="unpaid">Belum Bayar</option>
+              </select>
+            </div>
+            <button class="btn-primary" onclick="openModal('modalWarga')">＋ Tambah Warga</button>
+          </div>
+        </div>
+        <div class="iuran-grid" id="iuranGrid"></div>
+      </div>
+
+      <!-- ── RIWAYAT ── -->
+      <div class="page" id="page-riwayat">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Semua Transaksi</span>
+            <select class="filter-select" id="filterJenisTx" onchange="renderRiwayat()">
+              <option value="">Semua Jenis</option>
+              <option value="in">Pemasukan</option>
+              <option value="out">Pengeluaran</option>
+            </select>
+          </div>
+          <div class="card-body" style="padding:0 20px">
+            <div id="riwayatList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── LAPORAN ── -->
+      <div class="page" id="page-laporan">
+        <div class="laporan-action-bar">
+          <button class="btn-cetak primary" onclick="openShareModal()">📤 Cetak / Share Laporan</button>
+          <button class="btn-cetak outline" onclick="printLaporanDirect()">🖨️ Cetak ke Printer</button>
+          <button class="btn-cetak outline" onclick="savePDF()">📄 Simpan PDF</button>
+        </div>
+        <div class="laporan-header">
+          <h2>📋 Laporan Keuangan</h2>
+          <p>Karang Taruna RT 05 — Persiapan 17 Agustus 2026</p>
+          <div class="laporan-stats">
+            <div class="l-stat"><div class="ls-label">Total Pemasukan</div><div class="ls-value" id="lIn">Rp 0</div></div>
+            <div class="l-stat"><div class="ls-label">Total Pengeluaran</div><div class="ls-value" id="lOut">Rp 0</div></div>
+            <div class="l-stat"><div class="ls-label">Saldo Akhir</div><div class="ls-value" id="lSaldo">Rp 0</div></div>
+          </div>
+        </div>
+        <div class="dash-grid">
+          <div class="card"><div class="card-header"><span class="card-title">Pemasukan per Kategori</span></div><div class="card-body" id="laporanKatIn"></div></div>
+          <div class="card"><div class="card-header"><span class="card-title">Pengeluaran per Kategori</span></div><div class="card-body" id="laporanKatOut"></div></div>
+        </div>
+        <div class="card print-detail-page">
+          <div class="card-header"><span class="card-title">Detail Semua Transaksi</span></div>
+          <div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>Jenis</th><th>Keterangan</th><th>Kategori</th><th>Jumlah</th></tr></thead><tbody id="bodyLaporan"></tbody></table></div>
+        </div>
+        <div class="print-footer" id="printFooter">Dicetak oleh KasTaruna &mdash; Karang Taruna RT 07 &mdash; <span id="printDate"></span></div>
+      </div>
+
+      <!-- ── KATEGORI ── -->
+      <div class="page" id="page-kategori">
+        <div class="dash-grid">
+          <div class="card">
+            <div class="card-header"><span class="card-title">Kategori Pemasukan</span><button class="btn-primary" onclick="openModal('modalKatIn')">＋ Tambah</button></div>
+            <div class="card-body" style="padding:0 20px"><table><thead><tr><th>#</th><th>Nama</th><th>Aksi</th></tr></thead><tbody id="bodyKatIn"></tbody></table></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">Kategori Pengeluaran</span><button class="btn-primary" onclick="openModal('modalKatOut')">＋ Tambah</button></div>
+            <div class="card-body" style="padding:0 20px"><table><thead><tr><th>#</th><th>Nama</th><th>Aksi</th></tr></thead><tbody id="bodyKatOut"></tbody></table></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- content -->
+  </main>
+
+  <!-- BOTTOM NAV (mobile) -->
+  <nav class="bottom-nav">
+    <div class="bn-items">
+      <button class="bn-item active" id="bnav-dashboard" onclick="showPage('dashboard')"><span class="bn-icon">📊</span><span class="bn-label">Dashboard</span></button>
+      <button class="bn-item" id="bnav-pemasukan" onclick="showPage('pemasukan')"><span class="bn-icon">💵</span><span class="bn-label">Masuk</span></button>
+      <button class="bn-item" id="bnav-pengeluaran" onclick="showPage('pengeluaran')"><span class="bn-icon">💸</span><span class="bn-label">Keluar</span></button>
+      <button class="bn-item" id="bnav-iuran" onclick="showPage('iuran')"><span class="bn-icon">👥</span><span class="bn-label">Iuran</span></button>
+      <button class="bn-item" id="bnav-more" onclick="toggleMoreMenu()"><span class="bn-icon">⋯</span><span class="bn-label">Lainnya</span></button>
+    </div>
+  </nav>
+
+  <!-- MORE MENU (mobile) -->
+  <div class="more-menu-overlay" id="moreMenuOverlay" onclick="closeMoreMenu()"></div>
+  <div class="more-menu" id="moreMenu">
+    <div style="width:32px;height:3px;background:var(--gray-200);border-radius:99px;margin:0 auto 12px;"></div>
+    <div class="more-menu-grid">
+      <button class="more-menu-item" id="mnav-riwayat" onclick="showPage('riwayat');closeMoreMenu()"><span class="mm-icon">🕐</span><span class="mm-label">Riwayat</span></button>
+      <button class="more-menu-item" id="mnav-laporan" onclick="showPage('laporan');closeMoreMenu()"><span class="mm-icon">📄</span><span class="mm-label">Laporan</span></button>
+      <button class="more-menu-item" id="mnav-kategori" onclick="showPage('kategori');closeMoreMenu()"><span class="mm-icon">🏷️</span><span class="mm-label">Kategori</span></button>
+    </div>
+  </div>
+
+</div><!-- app -->
+
+<!-- ══════════════ SHARE MODAL ══════════════ -->
+<div class="share-modal-overlay" id="shareModal">
+  <div class="share-modal">
+    <div class="share-handle"></div>
+    <div class="share-header"><h3>📤 Cetak & amp; Share Laporan</h3><p>Pilih cara berbagi laporan keuangan Karang Taruna</p></div>
+    <div class="share-body">
+      <div class="share-section-label">Bagikan via</div>
+      <div class="share-options">
+        <button class="share-btn wa" onclick="shareWA()"><div class="sb-icon">💬</div><div class="sb-label">WhatsApp</div><div class="sb-sub">Chat/Grup</div></button>
+        <button class="share-btn cp" onclick="copyLaporan()"><div class="sb-icon">📋</div><div class="sb-label">Salin Teks</div><div class="sb-sub">Clipboard</div></button>
+        <button class="share-btn" onclick="shareNative()"><div class="sb-icon" style="background:var(--gray-100)">🔗</div><div class="sb-label">Lainnya</div><div class="sb-sub">Apps lain</div></button>
+      </div>
+      <div class="share-section-label">Cetak / Simpan</div>
+      <div class="print-options">
+        <button class="print-opt-btn" onclick="printLaporanDirect();closeShareModal()"><span class="po-icon">🖨️</span><div><div class="po-label">Cetak ke Printer</div><div class="po-sub">Dialog cetak browser</div></div></button>
+        <button class="print-opt-btn" onclick="savePDF();closeShareModal()"><span class="po-icon">📄</span><div><div class="po-label">Simpan PDF</div><div class="po-sub">Pilih "Save as PDF"</div></div></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ MODALS ══════════════ -->
+<!-- Pemasukan -->
+<div class="modal-overlay" id="modalPemasukan">
+  <div class="modal">
+    <div class="modal-header"><h3 id="titleModalPemasukan">Tambah Pemasukan</h3><button class="btn-close" onclick="closeModal('modalPemasukan')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="editIdPemasukan">
+      <div class="form-row">
+        <div class="fg"><label>Tanggal</label><input type="date" id="tglPemasukan"></div>
+        <div class="fg"><label>Kategori</label><select id="katPemasukan"><option value="">Pilih Kategori</option></select></div>
+      </div>
+      <div class="fg"><label>Keterangan</label><input type="text" id="ketPemasukan" placeholder="Misal: Iuran RT Juli"></div>
+      <div class="fg"><label>Jumlah (Rp)</label><input type="number" id="jmlPemasukan" placeholder="500000" inputmode="numeric"></div>
+      <div class="fg"><label>Catatan</label><textarea id="notePemasukan" placeholder="Catatan tambahan..."></textarea></div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeModal('modalPemasukan')">Batal</button>
+        <button class="btn-primary" onclick="savePemasukan()">💾 Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Pengeluaran -->
+<div class="modal-overlay" id="modalPengeluaran">
+  <div class="modal">
+    <div class="modal-header"><h3 id="titleModalPengeluaran">Tambah Pengeluaran</h3><button class="btn-close" onclick="closeModal('modalPengeluaran')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="editIdPengeluaran">
+      <div class="form-row">
+        <div class="fg"><label>Tanggal</label><input type="date" id="tglPengeluaran"></div>
+        <div class="fg"><label>Kategori</label><select id="katPengeluaran"><option value="">Pilih Kategori</option></select></div>
+      </div>
+      <div class="fg"><label>Keterangan</label><input type="text" id="ketPengeluaran" placeholder="Misal: Beli bendera"></div>
+      <div class="fg"><label>Jumlah (Rp)</label><input type="number" id="jmlPengeluaran" placeholder="200000" inputmode="numeric"></div>
+      <div class="fg"><label>Catatan</label><textarea id="notePengeluaran" placeholder="Catatan tambahan..."></textarea></div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeModal('modalPengeluaran')">Batal</button>
+        <button class="btn-primary" onclick="savePengeluaran()">💾 Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Warga -->
+<div class="modal-overlay" id="modalWarga">
+  <div class="modal">
+    <div class="modal-header"><h3 id="titleModalWarga">Tambah Data Warga</h3><button class="btn-close" onclick="closeModal('modalWarga')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="editIdWarga">
+      <div class="fg"><label>Nama Lengkap</label><input type="text" id="namaWarga" placeholder="Budi Santoso" autocomplete="off"></div>
+      <div class="form-row">
+        <div class="fg"><label>RT/Nomor Rumah</label><input type="text" id="rtWarga" placeholder="RT 07 / No. 12"></div>
+        <div class="fg"><label>Nominal Iuran (Rp)</label><input type="number" id="nominalWarga" placeholder="50000" inputmode="numeric"></div>
+      </div>
+      <div class="fg"><label>Status Iuran</label>
+        <select id="statusWarga"><option value="unpaid">Belum Bayar</option><option value="paid">Sudah Bayar</option></select>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeModal('modalWarga')">Batal</button>
+        <button class="btn-primary" onclick="saveWarga()">💾 Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Kategori In -->
+<div class="modal-overlay" id="modalKatIn">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-header"><h3>Tambah Kategori Pemasukan</h3><button class="btn-close" onclick="closeModal('modalKatIn')">✕</button></div>
+    <div class="modal-body">
+      <div class="fg"><label>Nama Kategori</label><input type="text" id="namaKatIn" placeholder="Iuran, Donasi, dll..."></div>
+      <div class="modal-footer"><button class="btn-cancel" onclick="closeModal('modalKatIn')">Batal</button><button class="btn-primary" onclick="saveKatIn()">Simpan</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- Kategori Out -->
+<div class="modal-overlay" id="modalKatOut">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-header"><h3>Tambah Kategori Pengeluaran</h3><button class="btn-close" onclick="closeModal('modalKatOut')">✕</button></div>
+    <div class="modal-body">
+      <div class="fg"><label>Nama Kategori</label><input type="text" id="namaKatOut" placeholder="Dekorasi, Konsumsi, dll..."></div>
+      <div class="modal-footer"><button class="btn-cancel" onclick="closeModal('modalKatOut')">Batal</button><button class="btn-primary" onclick="saveKatOut()">Simpan</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ JAVASCRIPT ══════════════ -->
+
+<script src="app.js" defer></script>
+</body>
+</html>
